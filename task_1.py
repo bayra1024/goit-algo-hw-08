@@ -20,6 +20,7 @@ def build_min_heap(cables):
 def find_minimal_costs(cables):
     heap = build_min_heap(cables)
     total_costs = 0
+    connection_order = []
 
     while len(heap) > 1:
         smallest1 = heapq.heappop(heap)
@@ -30,28 +31,17 @@ def find_minimal_costs(cables):
         new_cable.right = smallest2
 
         total_costs += new_cable.value
+        connection_order.append((smallest1.value, smallest2.value, new_cable.value))
         heapq.heappush(heap, new_cable)
 
-    return total_costs, new_cable
-
-
-def get_connection_order(root):
-    order = []
-
-    def traverse(node):
-        if node:
-            order.append(node.value)
-            traverse(node.left)
-            traverse(node.right)
-
-    traverse(root)
-    return order
+    return total_costs, connection_order
 
 
 # Example usage
-cables = [4, 2, 7, 1]
-result, connection_tree = find_minimal_costs(cables)
-connection_order = get_connection_order(connection_tree)
+cables = [4, 2, 7, 3, 14, 1]
+result, connection_order = find_minimal_costs(cables)
 
 print("Total costs:", result)
-print("Connection order:", connection_order)
+print("Connection order:")
+for connection in connection_order:
+    print(f"Connect {connection[0]} and {connection[1]} to get {connection[2]}")
